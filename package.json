@@ -1,0 +1,8 @@
+{
+    "name": "romajiconvert-js",
+    "version": "1.0.0",
+    "description": "Processes a kanji string into its romaji counterpart",
+    "dependencies": {
+        "hepburn": "github:anonymousthing/hepburn"
+    }
+}
