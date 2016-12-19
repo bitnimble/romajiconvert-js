@@ -78,7 +78,6 @@ function convertToRomaji(title, artist, anime, album) {
         child.stdout.on("end", () => {
             let lines = result.split("\n");
             let resultArrays = splitArray(lines, "EOS", true);
-            console.log(resultArrays[2]);
             let finalResult = {};
             finalResult.title = parseMecabOutput(resultArrays[0]);
             finalResult.artist = parseMecabOutput(resultArrays[1]);
@@ -92,10 +91,4 @@ function convertToRomaji(title, artist, anime, album) {
     });
 }
 
-//Example usage
-convertToRomaji("打打打打打打打打打打", "ヒゲドライバー join. SELEN", "東京喰種").then((result) => {
-    console.log("Title: " + result.title + "\n" + 
-        "Artist: " + result.artist + "\n" + 
-        "Anime: " + result.anime + "\n" + 
-        "Album: " + result.album);
-});
+module.exports = convertToRomaji;
