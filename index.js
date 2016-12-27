@@ -1,5 +1,16 @@
 const child_process = require('child_process');
 const hepburn = require('hepburn');
+const fs = require('fs');
+
+let customTagText = fs.readFileSync("./customTags.json");
+let customTags;
+try {
+    customTags = JSON.parse(customTagText);
+} catch (e) {
+    console.log(e);
+    console.log("Falling back to empty custom tags...");
+    customTags = {};
+}
 
 function isDigit(c) {
     let cc = c.charCodeAt(0);
@@ -58,10 +69,18 @@ function parseMecabOutput(lines) {
 
 function convertToRomaji(title, artist, anime, album) {
     return new Promise((resolve, reject) => {
-        title = title || "";
-        artist = artist || "";
-        anime = anime || "";
-        album = album || "";
+        //Trim all input if exists
+        title = title ? title.trim() : "";
+        artist = artist ? artist.trim() : "";
+        anime = anime ? anime.trim() : "";
+        album = album ? album.trim() : "";
+        
+        let finalResult = {};
+        //Apply custom tags on exact match
+        if (customTags.dict[title]) finalResult.title = postprocess(customTags.dict[title]);
+        if (customTags.dict[artist]) finalResult.title = postprocess(customTags.dict[artist]);
+        if (customTags.dict[anime]) finalResult.title = postprocess(customTags.dict[anime]);
+        if (customTags.dict[album]) finalResult.title = postprocess(customTags.dict[album]);
         
         //Start kakasi
         let child = child_process.exec('mecab');
@@ -78,11 +97,12 @@ function convertToRomaji(title, artist, anime, album) {
         child.stdout.on("end", () => {
             let lines = result.split("\n");
             let resultArrays = splitArray(lines, "EOS", true);
-            let finalResult = {};
-            finalResult.title = parseMecabOutput(resultArrays[0]);
-            finalResult.artist = parseMecabOutput(resultArrays[1]);
-            finalResult.anime = parseMecabOutput(resultArrays[2]);
-            finalResult.album = parseMecabOutput(resultArrays[3]);
+            
+            //Ignore mecab results if they matched a custom tag
+            if (!finalResult.title) finalResult.title = parseMecabOutput(resultArrays[0]);
+            if (!finalResult.artist) finalResult.artist = parseMecabOutput(resultArrays[1]);
+            if (!finalResult.anime) finalResult.anime = parseMecabOutput(resultArrays[2]);
+            if (!finalResult.album) finalResult.album = parseMecabOutput(resultArrays[3]);
             
             resolve(finalResult);
         });
