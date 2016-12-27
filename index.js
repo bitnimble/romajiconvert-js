@@ -49,7 +49,7 @@ function parseMecabOutput(lines) {
     for (let line of lines) {
         let components = line.trim().split(",");
         if (components[components.length - 1] == "*")
-            result.push(components[0].split("\t")[0]); //Push the english if MeCab didn't parse it
+            result.push(toRomaji(components[0].split("\t")[0])); //Push the english if MeCab didn't parse it
         else
             result.push(toRomaji(components[components.length - 1]))
     }
