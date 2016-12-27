@@ -2,9 +2,9 @@ const child_process = require('child_process');
 const hepburn = require('hepburn');
 const fs = require('fs');
 
-let customTagText = fs.readFileSync("./customTags.json");
 let customTags;
 try {
+    let customTagText = fs.readFileSync("./customTags.json");
     customTags = JSON.parse(customTagText);
 } catch (e) {
     console.log(e);
