@@ -62,7 +62,7 @@ function parseMecabOutput(lines) {
         if (components[components.length - 1] == "*")
             result.push(toRomaji(components[0].split("\t")[0])); //Push the english if MeCab didn't parse it
         else
-            result.push(toRomaji(components[components.length - 1]))
+            result.push(toRomaji(components[components.length - 2]))
     }
     return postprocess(result.join(""));
 }
