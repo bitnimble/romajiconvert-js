@@ -8,7 +8,7 @@
 		"バーゲン": "bargain",
 		"バイク": "bike",
 		"バター": "butter",
-		"ビジネスホテル": "businesshotel",
+		"ビジネスホテル": "business hotel",
 		"ブレザー": "blazer",
 		"チケット": "ticket",
 		"コンピューター": "computer",
@@ -51,6 +51,8 @@
 		"タイムオーバー": "time over",
 		"ティーンエージャー": "teenager",
 		"トラブル": "trouble",
-		"ワンピース": "one piece"
+		"ワンピース": "one piece",
+		"レシピ": "recipe",
+		"ラプソディ": "rhapsody"
 	}
 }
