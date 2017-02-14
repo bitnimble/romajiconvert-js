@@ -44,7 +44,7 @@ function postprocess(input) {
     input = input.toLowerCase();
     let newString = [];
     for (let i = 0; i < input.length; i++) {
-        if (isDigit(input[i]) || isLowercaseLetter(input[i])) {
+        if (isDigit(input[i]) || isLowercaseLetter(input[i]) || input[i] === ' ') {
             newString.push(input[i]);
         }
     }
@@ -146,7 +146,7 @@ function parseMecabOutput(lines) {
         else
             result.push(toRomaji(components[components.length - 2]))
     }
-    return postprocess(result.join(""));
+    return postprocess(result.join(" "));
 }
 
 function stripEmptyTrimmedElements(arr) {
