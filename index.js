@@ -198,7 +198,4 @@ function convertToRomaji(title, artist, anime, album) {
     });
 }
 
-let input = "精霊剣舞祭";
-convertToRomaji(input).then(r => console.log("Input: " + input + "\n" + "Output: " + r.title));
-
 module.exports = convertToRomaji;
