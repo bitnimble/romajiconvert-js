@@ -7,7 +7,7 @@ The original purpose of this project was to generate searchable romaji tags for 
 The script also supports replacement of specific hiragana and katakana words if you wish for them to be romanised differently -- for example, romanising certain borrowed words with the actual original English word: ハンバーガー --> "hamburger" instead of "hanbaagaa". A set of common English loan words is already included in `borrowedWords.json`. `customTags.json` is exactly the same (they are both loaded into the same lookup table); I've only separated it for organising purposes, so that I can have loan words in `borrowedWords.json` and other things like artist names in `customTags.json`. 
 
 # Installation and example usage
-Add `"romajiconvert-js": "github:anonymousthing/romajiconvert-js"` to your package.json dependencies list and npm install it.  
+Add `"romajiconvert-js": "github:anonymousthing/romajiconvert-js"` to your package.json dependencies list and npm install it. You will also need to install Mecab on your system - Windows binaries can be found at [this link](http://taku910.github.io/mecab/). Linux users can either `sudo apt install mecab` or compile it from source from the same link.
 
 Example usage:  
 
