@@ -135,7 +135,7 @@ function processInlineCustomTags(lines) {
 }
 
 function parseMecabOutput(lines) {
-	lines = processInlineCustomTags(lines);
+    lines = processInlineCustomTags(lines);
 	
     let result = [];
     
@@ -158,44 +158,37 @@ function stripEmptyTrimmedElements(arr) {
     return newArr;
 }
 
-function convertToRomaji(title, artist, anime, album) {
-    return new Promise((resolve, reject) => {
-        //Trim all input if exists
-        title = title || "";
-        artist = artist || "";
-        anime = anime || "";
-        album = album || "";
-        
-        //Start kakasi
-        let child = child_process.exec('mecab');
-        child.stdin.write(title + "\n");
-        child.stdin.write(artist + "\n");
-        child.stdin.write(anime + "\n");
-        child.stdin.write(album);
-        child.stdin.end();
-        
-        let result = "";
-        child.stdout.on("data", data => {
-            result += data;
+class RomajiConvert {
+    constructor() {
+        //Start mecab
+        this.mecab = child_process.spawn('mecab');
+        this.buffer = '';
+        this.mecab.stdout.on('data', data => {
+            const dataString = data.toString();
+            this.buffer += dataString;
+            if (dataString.indexOf('EOS') != -1) {
+                const lines = this.buffer.split('\n').map(l => l.trim()).filter(l => l != "EOS" && l != '');
+                this.buffer = '';
+
+                const result = parseMecabOutput(lines);
+                this.resolver(result);
+            }
         });
-        child.stdout.on("end", () => {
-			let finalResult = {};
-            let lines = result.split("\n");
-            //Strip empty
-            lines = stripEmptyTrimmedElements(lines);
-            let resultArrays = splitArray(lines, "EOS", true);
-            
-            //Ignore mecab results if they matched a custom tag
-            finalResult.title = parseMecabOutput(resultArrays[0]);
-            finalResult.artist = parseMecabOutput(resultArrays[1]);
-            finalResult.anime = parseMecabOutput(resultArrays[2]);
-            finalResult.album = parseMecabOutput(resultArrays[3]);
-            
-            resolve(finalResult);
+    }
+
+    convert(input) {
+        return new Promise((resolve, reject) => {
+            input = input || "";
+            this.mecab.stdin.write(input + "\n");
+            this.resolver = resolve;
+            this.mecab.removeAllListeners('error');
+            this.mecab.on('error', e => reject(e));
         });
-        
-        child.on("error", (e) => reject(e));
-    });
+    }
+
+    close() {
+        this.mecab.kill('SIGINT');
+    }
 }
 
-module.exports = convertToRomaji;
+module.exports = RomajiConvert;
